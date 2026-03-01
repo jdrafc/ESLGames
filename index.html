@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Game Arcade</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            background-color: #1a1a2e; 
+            color: white; 
+            margin: 0;
+            padding: 50px; 
+        }
+        h1 { color: #00d2ff; margin-bottom: 10px; }
+        p { color: #94a3b8; margin-bottom: 40px; }
+        
+        .arcade-container { 
+            display: flex; 
+            justify-content: center; 
+            flex-wrap: wrap;
+            gap: 25px; 
+        }
+
+        .game-card { 
+            background: #16213e; 
+            padding: 30px; 
+            border-radius: 15px; 
+            border: 2px solid #0f3460;
+            text-decoration: none; 
+            color: white; 
+            transition: all 0.3s ease; 
+            width: 200px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .game-card:hover { 
+            border-color: #00d2ff; 
+            background: #0f3460; 
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,210,255,0.2);
+        }
+
+        .game-card h3 { margin: 0; font-size: 1.2rem; }
+        .play-btn { 
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00d2ff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Game Arcade</h1>
+    <p>Choose a game to start playing</p>
+
+    <div class="arcade-container">
+        
+        <a href="ESL%20A%20to%20Z%20Game/" class="game-card">
+            <h3>ESL A to Z Game</h3>
+            <span class="play-btn">Click to Play</span>
+        </a>
+
+        </div>
+
+</body>
+</html>
