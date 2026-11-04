@@ -1,0 +1,5 @@
+.tmp.driveupload/
+*.log
+.backup-story-builder/
+
+.tmp.*

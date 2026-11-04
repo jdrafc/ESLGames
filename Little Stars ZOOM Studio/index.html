@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LittleStars - Interactive Teacher Studio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-default font-size-normal">
+    <!-- Confetti & Celebration Canvas Overlay -->
+    <canvas id="celebration-canvas"></canvas>
+    
+    <!-- Floating Audio/Speech Status Toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="app-container">
+        
+        <!-- TOP NAVBAR / TEACHER QUICK TOOLBAR -->
+        <header class="top-nav">
+            <div class="brand" id="nav-brand" role="button" tabindex="0">
+                <span class="brand-icon">⭐</span>
+                <span class="brand-name">LittleStars</span>
+                <span class="brand-badge">Zoom Studio</span>
+                <div id="nav-active-student" class="nav-active-student hidden" title="Selected Session Student">
+                    <span id="nav-student-avatar" class="nav-student-avatar">👧</span>
+                    <span id="nav-student-name" class="nav-student-name">Emma</span>
+                </div>
+                <!-- Studio Mode Switcher -->
+                <div class="studio-mode-switcher" id="studio-mode-switcher">
+                    <button id="btn-mode-junior" class="btn btn-mode active" title="Junior Studio (Ages 3-6)">👶 Junior (3–6)</button>
+                    <button id="btn-mode-senior" class="btn btn-mode" title="Senior Studio (Ages 8-10)">🎓 Senior (8–10)</button>
+                </div>
+            </div>
+
+            <!-- Active Lesson HUD Header Display -->
+            <div id="active-lesson-hud" class="active-lesson-hud hidden">
+                <div class="hud-item">
+                    <span class="hud-label">Activity:</span>
+                    <span id="hud-current-activity" class="hud-val">Phonics Warmup</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">Act Time:</span>
+                    <span id="hud-activity-timer" class="hud-timer">05:00</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">Lesson Time:</span>
+                    <span id="hud-lesson-timer" class="hud-timer">25:00</span>
+                </div>
+                <button id="btn-next-activity" class="btn btn-sm btn-accent" title="Next Activity">Next ⏭️</button>
+            </div>
+
+            <div class="nav-controls">
+                <button id="btn-quick-teacher-tools" class="btn btn-nav btn-purple" title="Teacher Tools (T)">⚡ Tools</button>
+                <button id="btn-scoreboard" class="btn btn-nav btn-amber" title="Scoreboard (S)">🏆 Scores (<span id="nav-star-count">0</span>❤️)</button>
+                <button id="btn-planner" class="btn btn-nav btn-teal" title="Lesson Planner (L)">📋 Planner</button>
+                <button id="btn-settings" class="btn btn-nav btn-gray" title="Settings (O)">⚙️ Settings</button>
+                <button id="btn-fullscreen" class="btn btn-nav btn-blue" title="Toggle Fullscreen (F)">⛶ Fullscreen</button>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT VIEWPORT -->
+        <main id="view-container" class="view-container">
+
+            <!-- ================= HOME SCREEN (JUNIOR 3-6) ================= -->
+            <section id="view-home" class="view-section active">
+                <div class="home-hero">
+                    <h1 class="hero-title">Welcome, Teacher! 🌟</h1>
+                    <p class="hero-subtitle">Interactive Zoom Teaching Tool for Junior Studio (Ages 3–6)</p>
+                </div>
+
+                <div class="home-grid">
+                    <div class="menu-card card-alphabet" data-target="view-alphabet">
+                        <div class="card-icon">🔤</div>
+                        <h2>Alphabet</h2>
+                        <p>Letters A to Z with Speech & Visuals</p>
+                        <button class="btn btn-card">Open Alphabet</button>
+                    </div>
+
+                    <div class="menu-card card-phonics" data-target="view-phonics">
+                        <div class="card-icon">🔊</div>
+                        <h2>Phonics</h2>
+                        <p>Letter Sounds & Phonetic Pronunciations</p>
+                        <button class="btn btn-card">Open Phonics</button>
+                    </div>
+
+                    <div class="menu-card card-colours" data-target="view-colours">
+                        <div class="card-icon">🎨</div>
+                        <h2>Colours</h2>
+                        <p>Vibrant Color Recognition & Animations</p>
+                        <button class="btn btn-card">Open Colours</button>
+                    </div>
+
+                    <div class="menu-card card-numbers" data-target="view-numbers">
+                        <div class="card-icon">🔢</div>
+                        <h2>Numbers</h2>
+                        <p>Numbers 1–20 & Interactive Counting</p>
+                        <button class="btn btn-card">Open Numbers</button>
+                    </div>
+
+                    <div class="menu-card card-shapes" data-target="view-shapes">
+                        <div class="card-icon">📐</div>
+                        <h2>Shapes</h2>
+                        <p>10 Geometry Shapes & Visual Traits</p>
+                        <button class="btn btn-card">Open Shapes</button>
+                    </div>
+
+                    <div class="menu-card card-words" data-target="view-words">
+                        <div class="card-icon">🐱</div>
+                        <h2>Simple Words</h2>
+                        <p>16 Essential Early Vocabulary Flashcards</p>
+                        <button class="btn btn-card">Open Words</button>
+                    </div>
+
+                    <div class="menu-card card-quiz" data-target="view-quiz">
+                        <div class="card-icon">🎮</div>
+                        <h2>Quiz Games</h2>
+                        <p>9 Interactive Games & Memory Match</p>
+                        <button class="btn btn-card">Play Quizzes</button>
+                    </div>
+
+                    <div class="menu-card card-teacher" data-target="view-teacher">
+                        <div class="card-icon">🎓</div>
+                        <h2>Teacher Stage</h2>
+                        <p>Full-screen Presentation, Spinners & Timers</p>
+                        <button class="btn btn-card">Launch Stage</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= HOME SCREEN (SENIOR 8-10) ================= -->
+            <section id="view-home-senior" class="view-section hidden">
+                <div class="home-hero hero-senior">
+                    <h1 class="hero-title">Senior Studio 🚀</h1>
+                    <p class="hero-subtitle">Advanced Zoom Teaching Suite for Ages 8–10</p>
+                </div>
+
+                <div class="home-grid">
+                    <div class="menu-card card-reading-senior" data-target="view-reading-senior">
+                        <div class="card-icon">📖</div>
+                        <h2>Reading & Story Lab</h2>
+                        <p>Passages, Audio Narration, Vocab & Questions</p>
+                        <button class="btn btn-card btn-senior">Open Reading Lab</button>
+                    </div>
+
+                    <div class="menu-card card-reading-practise" data-target="view-reading-practise">
+                        <div class="card-icon">📖</div>
+                        <h2>Reading Skills Practise</h2>
+                        <p>Core 4-Phase Interactive Reader • Living Scene, Flowchart & Grammar Doctor</p>
+                        <button class="btn btn-card btn-senior">Open Skills Practise</button>
+                    </div>
+
+                    <div class="menu-card card-vocab-senior" data-target="view-vocab-senior">
+                        <div class="card-icon">📚</div>
+                        <h2>Advanced Vocab & Spelling</h2>
+                        <p>Prefixes, Suffixes, Compound Words & Synonyms</p>
+                        <button class="btn btn-card btn-senior">Open Vocab Lab</button>
+                    </div>
+
+                    <div class="menu-card card-stem-senior" data-target="view-stem-senior">
+                        <div class="card-icon">🔬</div>
+                        <h2>STEM & Science Lab</h2>
+                        <p>Interactive Diagrams, Experiments & Speaking Frames</p>
+                        <button class="btn btn-card btn-senior">Open Science Lab</button>
+                    </div>
+
+                    <div class="menu-card card-writing-senior" data-target="view-story-senior">
+                        <div class="card-icon">✍️</div>
+                        <h2>Story Builder</h2>
+                        <p>Comic Creator, Creative Twists & Audio Reel</p>
+                        <button class="btn btn-card btn-senior">Open Story Builder</button>
+                    </div>
+
+                    <div class="menu-card card-teacher" data-target="view-teacher-senior">
+                        <div class="card-icon">🎓</div>
+                        <h2>Teacher Stage</h2>
+                        <p>Presentation Studio, Spinners & Timers</p>
+                        <button class="btn btn-card btn-senior">Launch Stage</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= SENIOR READING & COMPREHENSION LAB ================= -->
+            <section id="view-reading-senior" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home-senior">⬅️ Senior Home</button>
+                    <h2>📖 Reading & Comprehension Lab (ESL Ages 8–10)</h2>
+                    <div class="header-actions">
+                        <button class="quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span class="today-hearts-count">0</span> ❤️</button>
+                        <select id="select-reading-esl-level" class="form-select-sm level-select">
+                            <option value="beginner">🟢 ESL Beginner</option>
+                            <option value="intermediate" selected>🟡 ESL Intermediate</option>
+                            <option value="advanced">🔴 ESL Advanced</option>
+                        </select>
+                        <select id="select-reading-story" class="form-select-sm">
+                            <!-- Story options generated dynamically based on ESL Level -->
+                        </select>
+                        <button id="btn-reading-readaloud" class="btn btn-accent">🔊 Read Aloud</button>
+                        <button id="btn-reading-stop" class="btn btn-danger hidden">⏹️ Stop</button>
+                    </div>
+                </div>
+
+                <div class="reading-lab-container">
+                    <!-- Left Section: 2 Vertical Panes (Pane 1: Story Text, Pane 2: Visual Story Objects) -->
+                    <div class="reading-passage-card">
+                        <div class="passage-header">
+                            <span id="reading-genre-badge" class="badge-genre">Sci-Fi</span>
+                            <h3 id="reading-title">The Secret of the Quantum Key</h3>
+                            <span id="reading-level-badge" class="badge-level">Intermediate • 90 Words</span>
+                        </div>
+                        
+                        <div class="story-split-wrapper">
+                            <!-- Pane 1: Story Text & Vocab Focus -->
+                            <div class="story-pane-text">
+                                <div id="reading-body-text" class="passage-body">
+                                    <!-- Passage text injected via JavaScript -->
+                                </div>
+
+                                <!-- Vocabulary Spotlight Box -->
+                                <div class="vocab-spotlight-box">
+                                    <div class="vocab-title">💡 ESL Vocab Focus:</div>
+                                    <div id="vocab-chips-container" class="vocab-chips-container">
+                                        <!-- Interactive vocab chips -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pane 2: Visual Story Objects Showcase -->
+                            <div class="story-pane-visual">
+                                <div class="visual-pane-title">🖼️ Story Elements Visualizer</div>
+                                <div id="reading-objects-grid" class="reading-objects-grid">
+                                    <!-- Dynamic clean story objects injected via JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Comprehension & Interactive Discussion -->
+                    <div class="reading-quiz-card">
+                        <div class="reading-tabs">
+                            <button id="tab-btn-questions" class="tab-btn active">❓ Comprehension</button>
+                            <button id="tab-btn-discussion" class="tab-btn">🗣️ Class Discussion</button>
+                        </div>
+
+                        <div id="tab-content-questions" class="tab-pane active">
+                            <div class="quiz-question-header">
+                                <span id="reading-q-num" class="q-badge">Question 1 of 3</span>
+                            </div>
+                            <div id="reading-q-text" class="q-prompt-text">
+                                Why did Leo examine the glowing crystal under his microscope?
+                            </div>
+
+                            <div id="reading-q-options" class="q-options-grid">
+                                <!-- Options dynamically rendered -->
+                            </div>
+
+                            <div id="reading-q-feedback" class="q-feedback hidden"></div>
+                        </div>
+
+                        <div id="tab-content-discussion" class="tab-pane hidden">
+                            <h4 class="discussion-heading">💬 Zoom Speaking & Discussion Prompt</h4>
+                            <p id="reading-discussion-prompt" class="discussion-prompt-text">
+                                "If you discovered a device that could open doors to any galaxy, where would you explore first and why?"
+                            </p>
+                            <div class="discussion-actions">
+                                <button id="btn-discuss-award" class="btn btn-amber">⭐ Award 2 Hearts for Great Answers!</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= ADVANCED VOCABULARY & SPELLING LAB (SENIOR 8-10) ================= -->
+            <section id="view-vocab-senior" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home-senior">⬅️ Senior Home</button>
+                    <h2>📚 Advanced Vocabulary & Spelling</h2>
+                    <div class="header-actions">
+                        <button class="quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span class="today-hearts-count">0</span> ❤️</button>
+                        <select id="select-vocab-esl-level" class="form-select-sm level-select">
+                            <option value="beginner">🟢 ESL Beginner</option>
+                            <option value="intermediate" selected>🟡 ESL Intermediate</option>
+                            <option value="advanced">🔴 ESL Advanced</option>
+                        </select>
+                        <select id="select-vocab-category" class="form-select-sm">
+                            <option value="head_words">🐶 Head Words</option>
+                            <option value="tail_words">🐕 Tail Words</option>
+                            <option value="compound">☀️ Word Math</option>
+                        </select>
+                        <button id="btn-vocab-speak" class="btn btn-primary">🔊 Speak Word</button>
+                    </div>
+                </div>
+
+                <!-- Mode Switcher Tabs: Word Study vs Spelling Bee -->
+                <div class="vocab-mode-tabs">
+                    <button id="tab-vocab-study" class="tab-btn active">📖 Word Study & Meaning</button>
+                    <button id="tab-vocab-spelling" class="tab-btn">🐝 Listen & Spell (Spelling Bee)</button>
+                </div>
+
+                <div class="vocab-stage-container">
+                    <!-- PANEL 1: Study Display (Morphology & Context) -->
+                    <div id="vocab-study-panel" class="vocab-main-card">
+                        <div class="vocab-badge-row">
+                            <span id="vocab-cat-badge" class="badge-genre">Prefixes & Suffixes</span>
+                            <span id="vocab-index-badge" class="badge-level">Word 1 of 6</span>
+                        </div>
+
+                        <!-- Big Visual Math Equation Card -->
+                        <div id="vocab-math-equation" class="vocab-math-equation hidden">
+                            Not 👎 + Happy 😊 = Unhappy 😢
+                        </div>
+
+                        <h2 id="vocab-target-word" class="vocab-target-word">Unbelievable</h2>
+                        <p id="vocab-word-phonetic" class="vocab-phonetic">/ʌn.bɪˈliː.və.bəl/</p>
+
+                        <!-- Morphological Breakdown Blocks -->
+                        <div id="vocab-morph-breakdown" class="morph-breakdown-wrapper">
+                            <!-- Injected by JavaScript e.g. [Un] + [Believe] + [Able] -->
+                        </div>
+
+                        <!-- Definition & Context Box -->
+                        <div class="vocab-definition-box">
+                            <div class="def-item">
+                                <span class="def-label">Definition:</span>
+                                <span id="vocab-def-text" class="def-val">So extraordinary or surprising as to be difficult to believe.</span>
+                            </div>
+                            <div class="def-item">
+                                <span class="def-label">Sentence Context:</span>
+                                <span id="vocab-sentence-text" class="def-val italic">"The cheetah ran at an unbelievable speed across the savanna."</span>
+                            </div>
+                            <div id="vocab-teacher-tip-container" class="teacher-tip-box hidden">
+                                💡 <strong>Teacher Tip:</strong> <span id="vocab-teacher-tip-text">...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 2: Listen & Spell Bee Display (Option 3) -->
+                    <div id="vocab-spelling-panel" class="vocab-main-card spelling-card hidden">
+                        <div class="vocab-badge-row">
+                            <span id="spelling-cat-badge" class="badge-genre">🐝 Spelling Bee Challenge</span>
+                            <span id="spelling-length-badge" class="badge-level">12 Letters</span>
+                        </div>
+
+                        <div class="spelling-instruction-banner">
+                            🎧 <strong>Listen to the word & sentence!</strong> Write or type your spelling, click tiles for hints, then reveal & check!
+                        </div>
+
+                        <!-- Big Interactive Spelling Letter Tiles -->
+                        <div id="spelling-tiles-container" class="spelling-tiles-container">
+                            <!-- Injected by JS: e.g. tiles that flip open or reveal letter-by-letter -->
+                        </div>
+
+                        <!-- Audio and Sentence Context Box -->
+                        <div class="vocab-definition-box spelling-context-box">
+                            <div class="def-item">
+                                <span class="def-label">💡 Meaning:</span>
+                                <span id="spelling-def-text" class="def-val">...</span>
+                            </div>
+                            <div class="def-item">
+                                <span class="def-label">📝 Context Clue:</span>
+                                <span id="spelling-sentence-masked" class="def-val italic">...</span>
+                            </div>
+                            <div id="spelling-math-clue-item" class="def-item hidden">
+                                <span class="def-label">🧮 Math Clue:</span>
+                                <span id="spelling-math-clue-text" class="def-val">...</span>
+                            </div>
+                        </div>
+
+                        <!-- Spelling Bee Action Bar -->
+                        <div class="spelling-action-bar">
+                            <button id="btn-spell-say-word" class="btn btn-ctrl btn-primary">🔊 Say Word</button>
+                            <button id="btn-spell-say-sentence" class="btn btn-ctrl btn-blue">🗣️ In Sentence</button>
+                            <button id="btn-spell-hint" class="btn btn-ctrl btn-amber">💡 Give Hint</button>
+                            <button id="btn-spell-reveal" class="btn btn-ctrl btn-purple">👁️ Reveal & Spell</button>
+                            <button id="btn-spell-award" class="btn btn-ctrl btn-accent">⭐ Award Hearts</button>
+                        </div>
+                    </div>
+
+                    <!-- Shared Navigation Controls Toolbar -->
+                    <div class="stage-controls">
+                        <button id="btn-vocab-reset" class="btn btn-ctrl btn-blue">🔄 Reset to Word 1</button>
+                        <button id="btn-vocab-prev" class="btn btn-ctrl btn-orange">⬅️ Previous Word</button>
+                        <button id="btn-vocab-breakdown-audio" class="btn btn-ctrl btn-purple">🧩 Hear Breakdown</button>
+                        <button id="btn-vocab-award" class="btn btn-ctrl btn-amber">⭐ Award Heart</button>
+                        <button id="btn-vocab-next" class="btn btn-ctrl btn-green">Next Word ➡️</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= STEM & SCIENCE LAB (SENIOR 8-10) ================= -->
+            <section id="view-stem-senior" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home-senior">⬅️ Senior Home</button>
+                    <h2>🔬 STEM & Science Lab</h2>
+                    <div class="header-actions">
+                        <button class="quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span class="today-hearts-count">0</span> ❤️</button>
+                        <select id="select-stem-esl-level" class="form-select-sm level-select">
+                            <option value="beginner">🟢 Level 1: Beginner</option>
+                            <option value="intermediate" selected>🟡 Level 2: Intermediate</option>
+                            <option value="advanced">🔴 Level 3: Advanced</option>
+                        </select>
+                        <select id="select-stem-topic" class="form-select-sm topic-select">
+                            <!-- Populated dynamically based on active level -->
+                        </select>
+                        <button id="btn-stem-speak-summary" class="btn btn-primary">🔊 Speak Concept</button>
+                    </div>
+                </div>
+
+                <!-- Mode Switcher Tabs: Visual Diagram vs Virtual Experiment -->
+                <div class="vocab-mode-tabs stem-mode-tabs">
+                    <button id="tab-stem-diagram" class="tab-btn active">🔬 Visual Diagram (Click & Explore)</button>
+                    <button id="tab-stem-experiment" class="tab-btn">🧪 Virtual Experiment (Predict & Test)</button>
+                </div>
+
+                <div class="stem-stage-container">
+                    <!-- PANEL 1: Visual Diagram Panel -->
+                    <div id="stem-diagram-panel" class="stem-main-card">
+                        <div class="stem-badge-row">
+                            <span id="stem-diagram-badge" class="badge-genre">🌱 Plant Biology</span>
+                            <span id="stem-diagram-vocab-tag" class="badge-level">Head/Tail Tie-in</span>
+                        </div>
+
+                        <!-- Diagram Interactive Graphic Stage -->
+                        <div id="stem-diagram-svg-container" class="stem-svg-canvas">
+                            <!-- Injected SVG Diagram with clickable hotspots -->
+                        </div>
+
+                        <!-- Hotspot Information & Speech Box -->
+                        <div class="stem-hotspot-info-box">
+                            <div class="stem-info-title-row">
+                                <span id="stem-hotspot-title" class="stem-info-title">👉 Click any part of the diagram to explore!</span>
+                                <button id="btn-stem-speak-hotspot" class="btn btn-xs btn-blue hidden">🔊 Speak Part</button>
+                            </div>
+                            <p id="stem-hotspot-desc" class="stem-info-desc">Click roots, leaves, sun, clouds, or planets to hear how they work and reinforce your head & tail words!</p>
+                            <div id="stem-hotspot-tiein" class="stem-tiein-tag hidden">
+                                💡 <strong>Head/Tail Word:</strong> <span id="stem-hotspot-tiein-text">helper (-er = a person/thing that helps)</span>
+                            </div>
+                        </div>
+
+                        <!-- Diagram Toolbar -->
+                        <div class="stage-controls">
+                            <button id="btn-stem-diagram-explore-all" class="btn btn-ctrl btn-purple">▶️ Play All Parts</button>
+                            <button id="btn-stem-diagram-award" class="btn btn-ctrl btn-amber">⭐ Award 2 Hearts</button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 2: Virtual Experiment Panel -->
+                    <div id="stem-experiment-panel" class="stem-main-card hidden">
+                        <!-- 🗣️ "Say It First!" Speaking Banner -->
+                        <div class="stem-say-first-banner">
+                            <div class="say-first-header">
+                                <span class="say-first-badge">🗣️ SAY IT FIRST! (Zoom Speaking Frame)</span>
+                                <button id="btn-stem-speak-frame" class="btn btn-xs btn-purple" title="Click to hear model sentence">🔊 Hear Frame</button>
+                            </div>
+                            <div id="stem-sentence-frame-text" class="say-first-sentence">
+                                "I think the <strong>[apple]</strong> will <strong>[float]</strong>!"
+                            </div>
+                        </div>
+
+                        <!-- Simulation Canvas -->
+                        <div id="stem-sim-stage" class="stem-sim-canvas">
+                            <!-- Injected interactive experiment SVG / animation: Water Tank, Magnet Table, or Circuit -->
+                        </div>
+
+                        <!-- Test Item Selector Chips -->
+                        <div class="stem-items-bar">
+                            <span class="items-bar-label">Select Test Object:</span>
+                            <div id="stem-test-items-container" class="stem-items-chips">
+                                <!-- Chips dynamically injected (e.g., Apple, Coin, Wood, Key) -->
+                            </div>
+                        </div>
+
+                        <!-- Result & Explanation Banner -->
+                        <div id="stem-result-box" class="stem-result-box hidden">
+                            <div class="result-title-row">
+                                <span id="stem-result-icon">✨</span>
+                                <span id="stem-result-title">Result: It Floats!</span>
+                            </div>
+                            <div class="result-body-row">
+                                <div id="stem-result-tiein" class="stem-result-tiein" title="Click to hear result sentence">
+                                    💬 <strong>Result:</strong> <span id="stem-result-speech-text">"The red apple is light! It bobs on top."</span>
+                                </div>
+                                <span id="stem-result-desc" class="stem-result-desc">The wood block is light and less dense than water, so it floats at the top.</span>
+                            </div>
+                        </div>
+
+                        <!-- Experiment Controls -->
+                        <div class="stage-controls">
+                            <button id="btn-stem-retest" class="btn btn-ctrl btn-blue">🔄 Retest / Replay</button>
+                            <button id="btn-stem-test" class="btn btn-ctrl btn-green">🧪 Test Hypothesis!</button>
+                            <button id="btn-stem-experiment-award" class="btn btn-ctrl btn-amber">⭐ Award 2 Hearts</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= STORY BUILDER (SENIOR 8-10) ================= -->
+            <section id="view-story-senior" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home-senior">⬅️ Senior Home</button>
+                    <h2>✍️ Story Builder: Comic Creator</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-amber quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span class="today-hearts-count">0</span> ❤️</button>
+                        <select id="select-story-esl-level" class="form-select-sm level-select">
+                            <option value="beginner">🟢 1. Beginner</option>
+                            <option value="intermediate" selected>🟡 2. Intermediate</option>
+                            <option value="advanced">🔴 3. Advanced</option>
+                        </select>
+                        <select id="select-story-universe" class="form-select-sm universe-select">
+                            <!-- Populated dynamically based on selected level -->
+                        </select>
+                        <button id="btn-story-twist-trigger" class="btn btn-ctrl btn-purple">🎲 Mystery Twist</button>
+                        <button id="btn-story-present-trigger" class="btn btn-accent">🎬 Present Reel</button>
+                        <button id="btn-story-copy-script" class="btn btn-ctrl btn-blue">📋 Copy Script</button>
+                        <button id="btn-story-reset-all" class="btn btn-ctrl btn-orange">🔄 New Story</button>
+                    </div>
+                </div>
+
+                <div class="story-builder-container">
+                    <!-- SETUP & ASSET PICKER CARD -->
+                    <div class="story-setup-card">
+                        <div class="story-title-banner">
+                            <div class="story-title-left">
+                                <div class="story-title-input-wrapper story-title-display-wrapper">
+                                    <span class="story-title-icon">📖</span>
+                                    <div id="story-custom-title" class="story-title-display" title="Story title automatically generated from your chosen Hero and Setting">Loading Story Title...</div>
+                                </div>
+                                <div class="story-anchor-row">
+                                    <span id="story-anchor-tag" class="story-anchor-badge">🔗 Sequel to Reading Lab: The Secret of the Quantum Key</span>
+                                </div>
+                            </div>
+                            <div class="story-level-tags">
+                                <span id="story-level-badge" class="badge-genre">🟡 Intermediate</span>
+                                <span id="story-panels-count-badge" class="badge-level">4 Panels</span>
+                            </div>
+                        </div>
+
+                        <!-- 3-Way Asset Selector: Setting (4), Character (4), Catalyst Prop (8) -->
+                        <div class="story-asset-picker-grid">
+                            <!-- 1. Settings -->
+                            <div class="asset-column">
+                                <div class="asset-col-header">
+                                    <span class="col-title">🌍 1. Choose Setting</span>
+                                    <span id="selected-setting-label" class="col-selected-tag">Space Station</span>
+                                </div>
+                                <div id="picker-settings-row" class="asset-btn-row">
+                                    <!-- Injected by JS -->
+                                </div>
+                            </div>
+
+                            <!-- 2. Main Character -->
+                            <div class="asset-column">
+                                <div class="asset-col-header">
+                                    <span class="col-title">🦸 2. Choose Hero</span>
+                                    <span id="selected-char-label" class="col-selected-tag">Rover the Cyber Dog</span>
+                                </div>
+                                <div id="picker-characters-row" class="asset-btn-row">
+                                    <!-- Injected by JS -->
+                                </div>
+                            </div>
+
+                            <!-- 3. Catalyst Prop -->
+                            <div class="asset-column">
+                                <div class="asset-col-header">
+                                    <span class="col-title">⚡ 3. Catalyst Prop</span>
+                                    <span id="selected-prop-label" class="col-selected-tag">Glowing Crystal</span>
+                                </div>
+                                <div id="picker-props-row" class="asset-btn-row">
+                                    <!-- Injected by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ACTIVE PLOT TWIST NOTIFICATION BANNER (When twist is active) -->
+                    <div id="story-twist-active-banner" class="story-twist-banner hidden">
+                        <div class="twist-banner-left">
+                            <span class="twist-badge">🎲 ACTIVE PLOT TWIST:</span>
+                            <span id="story-active-twist-text" class="twist-text">The power suddenly shuts off and emergency red lights start flashing!</span>
+                        </div>
+                        <button id="btn-clear-twist" class="btn btn-xs btn-orange" title="Remove this twist">✕ Clear Twist</button>
+                    </div>
+
+                    <!-- MORPHOLOGY & POWER WORDS TOOLBAR (Tie-in to Senior Vocab) -->
+                    <div class="story-morphology-box">
+                        <div class="morph-header">
+                            <span class="morph-title">💡 Actionable Power Words (Click to hear pronunciation & insert):</span>
+                            <span class="morph-sub">-tion (Action/Result) • un-/dis- (Opposite) • -ous (Full of)</span>
+                        </div>
+                        <div id="story-powerwords-container" class="morph-chips-list">
+                            <!-- Injected by JS with audio pronunciation & click-to-insert -->
+                        </div>
+                    </div>
+
+                    <!-- COMIC PANELS STAGE (3 or 4 Panels) -->
+                    <div id="story-comic-canvas" class="story-comic-grid grid-4-panels">
+                        <!-- Dynamic comic panels injected by JS -->
+                    </div>
+
+                    <!-- BOTTOM TEACHER CONTROLS -->
+                    <div class="stage-controls story-stage-controls">
+                        <button id="btn-story-read-full" class="btn btn-ctrl btn-purple">🔊 Read Full Comic Aloud</button>
+                        <button id="btn-story-twist-bottom" class="btn btn-ctrl btn-blue">🎲 Spin Mystery Twist</button>
+                        <button id="btn-story-award" class="btn btn-ctrl btn-amber">⭐ Award 3 Hearts</button>
+                        <button id="btn-story-present-bottom" class="btn btn-ctrl btn-green">🎬 Start Presentation Reel</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= READING SKILLS PRACTISE (AGES 8-10) ================= -->
+            <section id="view-reading-practise" class="view-section hidden">
+                <div class="reading-practise-header-wrap">
+                    <div class="section-header">
+                        <button class="btn btn-back" data-target="view-home-senior">⬅️ Senior Home</button>
+                        <h2>📖 Reading Skills Practise (Ages 8–10)</h2>
+                        <div class="header-actions">
+                            <button class="quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span class="today-hearts-count">0</span> ❤️</button>
+                            <select id="select-practise-esl-level" class="form-select-sm level-select">
+                                <option value="beginner">🟢 Beginner</option>
+                                <option value="intermediate" selected>🟡 Intermediate</option>
+                                <option value="advanced">🔴 Advanced</option>
+                            </select>
+                            <select id="select-practise-unit" class="form-select-sm unit-select">
+                                <!-- Populated dynamically by js/reading-practise.js -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Teacher Zoom Quick Control Bar -->
+                    <div class="reading-practise-teacher-toolbar">
+                        <div class="teacher-toolbar-group">
+                            <span class="teacher-toolbar-label">🎮 Zoom Teacher Bar:</span>
+                            <button id="btn-practise-voice-mode" class="btn btn-ctrl btn-purple" title="Toggle between Live Teacher Voice and Auto-TTS">
+                                🎙️ Mode: <span id="label-practise-voice-mode">Auto-TTS</span>
+                            </button>
+                            <button id="btn-practise-tts-speed" class="btn btn-ctrl btn-blue" title="Toggle TTS speed">
+                                🐢 Speed: <span id="label-practise-tts-speed">0.85x (ESL Slow)</span>
+                            </button>
+                            <button id="btn-practise-focus-mode" class="btn btn-ctrl btn-amber" title="Toggle reading animation freeze to reduce visual distraction">
+                                👀 Reading Focus: <span id="label-practise-focus-mode">OFF</span>
+                            </button>
+                        </div>
+                        <div class="teacher-toolbar-group">
+                            <button id="btn-practise-award-star" class="btn btn-ctrl btn-green">
+                                ⭐ Award +1 Star
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 4 Phase Navigation Tabs -->
+                    <div class="reading-practise-phase-tabs">
+                        <button class="practise-phase-tab-btn active" data-phase="1">
+                            <span class="phase-step-badge">Phase 1</span> 🎯 Warm-Up & Vocab
+                        </button>
+                        <button class="practise-phase-tab-btn" data-phase="2">
+                            <span class="phase-step-badge">Phase 2</span> 🎬 Story Stage & Reader
+                        </button>
+                        <button class="practise-phase-tab-btn" data-phase="3">
+                            <span class="phase-step-badge">Phase 3</span> 🧠 Skills Lab & Flowchart
+                        </button>
+                        <button class="practise-phase-tab-btn" data-phase="4">
+                            <span class="phase-step-badge">Phase 4</span> 🛠️ Grammar Workshop
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Content Container for Phases -->
+                <div id="practise-studio-content" class="reading-practise-content">
+                    <!-- Injected dynamically by js/reading-practise.js -->
+                </div>
+            </section>
+
+            <!-- ================= ALPHABET MODE ================= -->
+            <section id="view-alphabet" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home">⬅️ Home</button>
+                    <h2>Alphabet Stage</h2>
+                    <div class="header-actions">
+                        <button id="btn-alpha-playall" class="btn btn-accent">▶️ Play All A–Z</button>
+                        <button id="btn-alpha-speak" class="btn btn-primary">🔊 Speak Letter</button>
+                    </div>
+                </div>
+
+                <div class="display-stage card-stage">
+                    <div class="letter-display-wrapper">
+                        <div id="alpha-upper" class="letter-big upper-case">A</div>
+                        <div id="alpha-lower" class="letter-big lower-case">a</div>
+                    </div>
+                    <div class="stage-illustration" id="alpha-svg-container">
+                        <!-- SVG graphic dynamically inserted -->
+                    </div>
+                    <div class="word-label" id="alpha-word">Apple</div>
+                </div>
+
+                <div class="stage-controls">
+                    <button id="btn-alpha-reset" class="btn btn-ctrl btn-blue">🔄 Start at A</button>
+                    <button id="btn-alpha-prev" class="btn btn-ctrl btn-orange">⬅️ Previous</button>
+                    <button id="btn-alpha-random" class="btn btn-ctrl btn-purple">🎲 Random</button>
+                    <button id="btn-alpha-next" class="btn btn-ctrl btn-green">Next ➡️</button>
+                </div>
+            </section>
+
+            <!-- ================= PHONICS MODE ================= -->
+            <section id="view-phonics" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home">⬅️ Home</button>
+                    <h2>Phonics & Sound Stage</h2>
+                    <div class="header-actions">
+                        <button id="btn-phonics-playall" class="btn btn-accent">▶️ Play All A–Z</button>
+                        <button id="btn-phonics-speak" class="btn btn-primary">🔊 Say Sound</button>
+                    </div>
+                </div>
+
+                <div class="display-stage card-stage">
+                    <div class="phonics-badge" id="phonics-sound">Sound: /æ/</div>
+                    <div class="letter-display-wrapper">
+                        <div id="phonics-letter" class="letter-big">Aa</div>
+                    </div>
+                    <div class="stage-illustration" id="phonics-svg-container">
+                        <!-- SVG graphic -->
+                    </div>
+                    <div class="phonics-phrase" id="phonics-phrase">"a-a-apple"</div>
+                </div>
+
+                <div class="stage-controls">
+                    <button id="btn-phonics-reset" class="btn btn-ctrl btn-blue">🔄 Start at A</button>
+                    <button id="btn-phonics-prev" class="btn btn-ctrl btn-orange">⬅️ Previous</button>
+                    <button id="btn-phonics-random" class="btn btn-ctrl btn-purple">🎲 Random</button>
+                    <button id="btn-phonics-next" class="btn btn-ctrl btn-green">Next ➡️</button>
+                </div>
+            </section>
+
+            <!-- ================= COLOURS MODE ================= -->
+            <section id="view-colours" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home">⬅️ Home</button>
+                    <h2>Colours Exploration</h2>
+                    <div class="header-actions">
+                        <button id="btn-colour-playall" class="btn btn-accent">▶️ Play All Colours</button>
+                        <button id="btn-color-speak" class="btn btn-primary">🔊 Say Colour</button>
+                    </div>
+                </div>
+
+                <div class="display-stage card-stage" id="colour-stage">
+                    <div class="stage-illustration stage-illustration-large" id="colour-svg-container"></div>
+                    <h1 class="colour-title" id="colour-name">Red</h1>
+                </div>
+
+                <div class="colour-palette-selector" id="colour-palette">
+                    <!-- Color bubbles inserted via JS -->
+                </div>
+
+                <div class="stage-controls">
+                    <button id="btn-colour-prev" class="btn btn-ctrl btn-orange">⬅️ Previous</button>
+                    <button id="btn-colour-random" class="btn btn-ctrl btn-purple">🎲 Random</button>
+                    <button id="btn-colour-next" class="btn btn-ctrl btn-green">Next ➡️</button>
+                </div>
+            </section>
+
+            <!-- ================= NUMBERS MODE ================= -->
+            <section id="view-numbers" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home">⬅️ Home</button>
+                    <h2>Numbers & Interactive Counting (1–20)</h2>
+                    <button id="btn-number-speak" class="btn btn-primary">🔊 Count Out Loud</button>
+                </div>
+
+                <div class="display-stage card-stage">
+                    <div class="number-giant-badge" id="number-digit">1</div>
+                    <div class="number-word-label" id="number-word">One</div>
+                    
+                    <div class="interactive-counting-area" id="number-objects-grid">
+                        <!-- Tappable interactive counting objects generated by JS -->
+                    </div>
+                    <p class="counting-instruction">Tap objects to count them together!</p>
+                </div>
+
+                <div class="stage-controls">
+                    <button id="btn-number-prev" class="btn btn-ctrl btn-orange">⬅️ Previous</button>
+                    <button id="btn-number-random" class="btn btn-ctrl btn-purple">🎲 Random</button>
+                    <button id="btn-number-next" class="btn btn-ctrl btn-green">Next ➡️</button>
+                </div>
+            </section>
+
+            <!-- ================= SHAPES MODE ================= -->
+            <section id="view-shapes" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home">⬅️ Home</button>
+                    <h2>Shapes Studio</h2>
+                    <div class="header-actions">
+                        <button id="btn-shape-playall" class="btn btn-accent">▶️ Play All Shapes</button>
+                        <button id="btn-shape-speak" class="btn btn-primary">🔊 Say Shape</button>
+                    </div>
+                </div>
+
+                <div class="display-stage card-stage">
+                    <div class="stage-illustration shape-illustration" id="shape-svg-container">
+                        <!-- Shape SVG -->
+                    </div>
+                    <h1 class="shape-title" id="shape-name">Circle</h1>
+                </div>
+
+                <div class="stage-controls">
+                    <button id="btn-shape-reset" class="btn btn-ctrl btn-blue">🔄 Start at First Shape</button>
+                    <button id="btn-shape-prev" class="btn btn-ctrl btn-orange">⬅️ Previous</button>
+                    <button id="btn-shape-random" class="btn btn-ctrl btn-purple">🎲 Random</button>
+                    <button id="btn-shape-next" class="btn btn-ctrl btn-green">Next ➡️</button>
+                </div>
+            </section>
+
+            <!-- ================= SIMPLE WORDS MODE ================= -->
+            <section id="view-words" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home">⬅️ Home</button>
+                    <h2>Simple Words Flashcards</h2>
+                    <div class="header-actions">
+                        <button id="btn-word-playall" class="btn btn-accent">▶️ Play All Words</button>
+                        <button id="btn-word-speak" class="btn btn-primary">🔊 Say Word</button>
+                    </div>
+                </div>
+
+                <div class="display-stage card-stage">
+                    <div class="stage-illustration" id="word-svg-container">
+                        <!-- SVG Image -->
+                    </div>
+                    <h1 class="word-card-title" id="word-card-name">Cat</h1>
+                    <div class="phonics-sound-tag" id="word-spelling">C - A - T</div>
+                </div>
+
+                <div class="stage-controls">
+                    <button id="btn-word-reset" class="btn btn-ctrl btn-blue">🔄 Reset to Word 1</button>
+                    <button id="btn-word-prev" class="btn btn-ctrl btn-orange">⬅️ Previous</button>
+                    <button id="btn-word-random" class="btn btn-ctrl btn-purple">🎲 Random</button>
+                    <button id="btn-word-next" class="btn btn-ctrl btn-green">Next ➡️</button>
+                </div>
+            </section>
+
+            <!-- ================= QUIZ MENU MODE ================= -->
+            <section id="view-quiz" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home">⬅️ Home</button>
+                    <h2>Educational Quiz Games</h2>
+                    <button id="quiz-menu-score-badge" class="quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span id="quiz-score-stars" class="today-hearts-count">0</span> ❤️</button>
+                </div>
+
+                <!-- Quiz Type Selector Menu -->
+                <div id="quiz-menu" class="quiz-menu-grid">
+                    <div class="quiz-card" data-quiz="letter">
+                        <div class="q-icon">🔤</div>
+                        <h3>Find the Letter</h3>
+                        <p>Match the spoken letter!</p>
+                    </div>
+                    <div class="quiz-card" data-quiz="colour">
+                        <div class="q-icon">🎨</div>
+                        <h3>Find the Colour</h3>
+                        <p>Pick the right color tile!</p>
+                    </div>
+                    <div class="quiz-card" data-quiz="shape">
+                        <div class="q-icon">📐</div>
+                        <h3>Find the Shape</h3>
+                        <p>Identify geometric shapes!</p>
+                    </div>
+                    <div class="quiz-card" data-quiz="counting">
+                        <div class="q-icon">🔢</div>
+                        <h3>Count the Objects</h3>
+                        <p>How many items do you see?</p>
+                    </div>
+                    <div class="quiz-card" data-quiz="wordstart">
+                        <div class="q-icon">🔠</div>
+                        <h3>Starts With...</h3>
+                        <p>Which letter starts the word?</p>
+                    </div>
+                    <div class="quiz-card" data-quiz="picmatch">
+                        <div class="q-icon">🖼️</div>
+                        <h3>Picture Match</h3>
+                        <p>Match picture to word!</p>
+                    </div>
+                    <div class="quiz-card" data-quiz="truefalse">
+                        <div class="q-icon">❓</div>
+                        <h3>True or False</h3>
+                        <p>Is the statement correct?</p>
+                    </div>
+                    <div class="quiz-card" data-quiz="memory">
+                        <div class="q-icon">🎴</div>
+                        <h3>Memory Match</h3>
+                        <p>Flip cards to find pairs!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= STANDALONE ACTIVE QUIZ GAME STAGE PAGE ================= -->
+            <section id="view-quiz-stage" class="view-section hidden">
+                <!-- ROW 1: HOME/TOP POSITION HEADER -->
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-quiz">⬅️ All Quizzes</button>
+                    <h2 id="quiz-game-title">Find the Letter</h2>
+                    <button id="quiz-stage-score-badge" class="quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span id="quiz-stage-score-stars" class="today-hearts-count">0</span> ❤️</button>
+                    <div class="header-actions">
+                        <button id="btn-quiz-repeat-prompt" class="btn btn-primary">🔊 Repeat Question</button>
+                    </div>
+                </div>
+
+                <!-- ROW 2: GAME QUESTION SECTION (DIRECTLY UNDER HEADER) -->
+                <div class="quiz-question-box card-stage" style="width: 100%; max-width: 800px; margin: 20px auto 0 auto; text-align: center; min-height: auto; padding: 30px;">
+                    <h2 id="quiz-question-text" style="font-size: 2.2rem; color: #2d3436; margin: 0;">Which one is letter E?</h2>
+                    <div id="quiz-question-visual" class="quiz-question-visual"></div>
+                </div>
+
+                <!-- ROW 3: POINTER CARDS / ANSWER CHOICES SECTION (DIRECTLY UNDER QUESTION) -->
+                <div id="quiz-options-grid" class="quiz-options-grid"></div>
+            </section>
+
+            <!-- ================= TEACHER MODE / STAGE ================= -->
+            <section id="view-teacher" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home">⬅️ Home</button>
+                    <h2>Teacher Zoom Presentation Stage</h2>
+                    <button id="teacher-score-badge" class="quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span id="teacher-score-stars" class="today-hearts-count">0</span> ❤️</button>
+                    <div class="header-actions">
+                        <button id="btn-teacher-fullscreen" class="btn btn-blue">⛶ Fullscreen Stage</button>
+                    </div>
+                </div>
+
+                <div class="teacher-stage-layout">
+                    <!-- Big Presentation Card -->
+                    <div class="teacher-main-card card-stage" id="teacher-stage-card">
+                        <div class="teacher-stage-badge" id="teacher-stage-category">RANDOM SPINNER</div>
+                        <div id="teacher-stage-display" class="teacher-stage-display">
+                            <span class="placeholder-text">Click any Random button to generate content for class!</span>
+                        </div>
+                        <div id="teacher-answer-box" class="teacher-answer-box hidden">
+                            <span class="answer-label">Answer:</span> <strong id="teacher-answer-text">---</strong>
+                        </div>
+                    </div>
+
+                    <!-- Side Control Tools -->
+                    <div class="teacher-controls-sidebar">
+                        <div class="sidebar-box">
+                            <h3>🎲 Quick Generators</h3>
+                            <div class="btn-grid-2">
+                                <button class="btn btn-sm btn-purple" id="tbtn-rand-letter">🔤 Letter</button>
+                                <button class="btn btn-sm btn-teal" id="tbtn-rand-number">🔢 Number</button>
+                                <button class="btn btn-sm btn-pink" id="tbtn-rand-colour">🎨 Colour</button>
+                                <button class="btn btn-sm btn-amber" id="tbtn-rand-shape">📐 Shape</button>
+                                <button class="btn btn-sm btn-green" id="tbtn-rand-word">🐱 Word</button>
+                                <button class="btn btn-sm btn-orange" id="tbtn-rand-quiz">🎮 Quiz</button>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-box">
+                            <h3>👁️ Answer Controls</h3>
+                            <button id="btn-toggle-answer" class="btn btn-block btn-primary">👁️ Show Answer (+1 ❤️)</button>
+                        </div>
+
+                        <div class="sidebar-box">
+                            <h3>⏱️ Zoom Timers & Stopwatch</h3>
+                            <div class="timer-display-giant" id="teacher-timer-digits">00:00</div>
+                            <div class="btn-grid-4">
+                                <button class="btn btn-xs btn-blue" data-timer="10">10s</button>
+                                <button class="btn btn-xs btn-blue" data-timer="20">20s</button>
+                                <button class="btn btn-xs btn-blue" data-timer="30">30s</button>
+                                <button class="btn btn-xs btn-blue" data-timer="60">60s</button>
+                            </div>
+                            <div class="btn-grid-2 margin-top-xs">
+                                <button id="btn-timer-stopwatch" class="btn btn-sm btn-teal">⏱️ Stopwatch</button>
+                                <button id="btn-timer-reset" class="btn btn-sm btn-red">🛑 Reset</button>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-box">
+                            <h3>🎉 Quick Rewards</h3>
+                            <div class="btn-grid-2">
+                                <button class="btn btn-sm btn-gold" id="btn-trigger-confetti">💖 Hearts Burst</button>
+                                <button class="btn btn-sm btn-pink" id="btn-trigger-balloons">🎈 Balloons</button>
+                                <button class="btn btn-sm btn-accent" id="btn-trigger-fireworks">🎆 Fireworks</button>
+                                <button class="btn btn-sm btn-green" id="btn-trigger-cheers">👏 Applause</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= SENIOR TEACHER STAGE (AGES 8-10) ================= -->
+            <section id="view-teacher-senior" class="view-section hidden">
+                <div class="section-header">
+                    <button class="btn btn-back" data-target="view-home-senior">⬅️ Senior Home</button>
+                    <h2>🎓 Senior Zoom Stage (Ages 8–10)</h2>
+                    <div class="header-actions">
+                        <select id="select-senior-stage-level" class="form-select-sm level-select">
+                            <option value="beginner">🟢 Beginner (A1)</option>
+                            <option value="intermediate" selected>🟡 Intermediate (A2)</option>
+                            <option value="advanced">🟣 Advanced (B1)</option>
+                        </select>
+                        <button id="senior-stage-score-badge" class="quiz-score-badge clickable-badge" title="Click to Reset Today's Hearts">Today's Hearts: <span id="senior-stage-score-stars" class="today-hearts-count">0</span> ❤️</button>
+                        <button id="btn-senior-stage-fullscreen" class="btn btn-blue">⛶ Fullscreen Stage</button>
+                    </div>
+                </div>
+
+                <div class="senior-stage-layout">
+                    <!-- Big Presentation Card -->
+                    <div class="senior-stage-card" id="senior-stage-presentation-card">
+                        <div class="senior-stage-header-badges">
+                            <span class="senior-stage-badge" id="senior-stage-category">TRUE OR FALSE?</span>
+                        </div>
+
+                        <div class="senior-stage-center-box">
+                            <div class="senior-stage-visual" id="senior-stage-visual">🚀</div>
+                            <div class="senior-stage-prompt" id="senior-stage-prompt">Loading challenge...</div>
+                            <button id="btn-senior-prompt-speak" class="btn btn-sm btn-purple margin-top-xs" title="Listen to question">🔊 Listen</button>
+                        </div>
+
+                        <!-- 1 Finger vs 2 Fingers Gesture Pill Buttons -->
+                        <div class="senior-gesture-options" id="senior-stage-options">
+                            <button class="senior-gesture-pill" id="senior-pill-opt-a">
+                                <span class="gesture-icon">☝️</span>
+                                <span class="gesture-text">1 Finger: Option A</span>
+                            </button>
+                            <button class="senior-gesture-pill" id="senior-pill-opt-b">
+                                <span class="gesture-icon">✌️</span>
+                                <span class="gesture-text">2 Fingers: Option B</span>
+                            </button>
+                        </div>
+
+                        <!-- Answer Reveal Box (Hidden by default) -->
+                        <div id="senior-stage-answer-box" class="senior-stage-answer-box hidden">
+                            <div class="senior-stage-answer-header">
+                                <span class="answer-badge" id="senior-stage-answer-text">✅ Answer</span>
+                            </div>
+                            <p class="senior-stage-explanation" id="senior-stage-explanation-text"></p>
+                        </div>
+                    </div>
+
+                    <!-- Side Control Palette -->
+                    <div class="senior-stage-sidebar">
+                        <div class="sidebar-box">
+                            <h3>🎲 Quick Challenges</h3>
+                            <div class="senior-btn-grid">
+                                <button class="btn btn-sm btn-teal" id="tbtn-senior-tf">☝️/✌️ True or False</button>
+                                <button class="btn btn-sm btn-purple" id="tbtn-senior-ww">🅰️/🅱️ Word Fits</button>
+                                <button class="btn btn-sm btn-pink" id="tbtn-senior-mw">🔤 Mystery Word</button>
+                                <button class="btn btn-sm btn-orange" id="tbtn-senior-random">⚡ Random Mix</button>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-box">
+                            <h3>⏭️ Stage Flow & Audio</h3>
+                            <div class="btn-stack">
+                                <button id="btn-senior-next-question" class="btn btn-block btn-green">⏭️ Next Question</button>
+                                <button id="btn-senior-repeat-audio" class="btn btn-block btn-blue">🔊 Repeat Prompt</button>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-box">
+                            <h3>⏱️ Rapid Blitz Timers</h3>
+                            <div class="senior-timer-display" id="senior-stage-timer-display">00:00</div>
+                            <div class="btn-grid-4">
+                                <button class="btn btn-xs btn-blue" data-senior-timer="15">15s</button>
+                                <button class="btn btn-xs btn-blue" data-senior-timer="30">30s</button>
+                                <button class="btn btn-xs btn-blue" data-senior-timer="60">60s</button>
+                                <button class="btn btn-xs btn-red" data-senior-timer="stop">🛑 Stop</button>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-box">
+                            <h3>💖 Student Rewards</h3>
+                            <div class="btn-stack">
+                                <button id="btn-senior-stage-award" class="btn btn-block btn-green">❤️ Award +1 Heart</button>
+                                <button id="btn-senior-stage-winner" class="btn btn-block btn-gold">🥇 Winner Celebration</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ================= MODALS & OVERLAYS ================= -->
+
+    <!-- SCOREBOARD MODAL -->
+    <div id="modal-scoreboard" class="modal-overlay hidden">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <h2>🏆 Student Leaderboard & Heart Rewards</h2>
+                <button class="btn-close-modal">✖</button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Student Form -->
+                <form id="form-add-student" class="add-student-form">
+                    <input type="text" id="input-student-name" placeholder="Enter student name (e.g. Leo)" required maxlength="20">
+                    <select id="select-student-gender" class="select-gender">
+                        <option value="auto">Auto Gender</option>
+                        <option value="boy">👦 Boy</option>
+                        <option value="girl">👧 Girl</option>
+                    </select>
+                    <button type="submit" class="btn btn-green">➕ Add Student</button>
+                </form>
+
+                <!-- Student List & Score Cards -->
+                <div id="scoreboard-list" class="scoreboard-list-grid">
+                    <!-- Dynamic Student Cards -->
+                </div>
+
+                <div class="scoreboard-actions">
+                    <button id="btn-celebrate-winner" class="btn btn-gold btn-lg">🥇 Winner Celebration Overlay!</button>
+                    <button id="btn-reset-scores" class="btn btn-red btn-sm">Reset All Scores</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LESSON PLANNER MODAL -->
+    <div id="modal-planner" class="modal-overlay hidden">
+        <div class="modal-card modal-xl">
+            <div class="modal-header">
+                <h2>📋 Lesson Planner & Class Runner</h2>
+                <button class="btn-close-modal">✖</button>
+            </div>
+            <div class="modal-body planner-layout">
+                <!-- Left: Saved Lesson Plans List -->
+                <div class="planner-sidebar">
+                    <h3>Saved Plans</h3>
+                    <div id="saved-plans-list" class="saved-plans-list"></div>
+                    <button id="btn-new-plan" class="btn btn-block btn-green">➕ Create New Plan</button>
+                </div>
+
+                <!-- Right: Active Plan Editor / Details -->
+                <div class="planner-editor">
+                    <div class="editor-header">
+                        <input type="text" id="plan-title-input" class="plan-title-input" value="30-Min Phonics & Shapes Lesson">
+                        <div class="editor-btns">
+                            <button id="btn-save-plan" class="btn btn-primary">💾 Save Plan</button>
+                            <button id="btn-duplicate-plan" class="btn btn-purple">📄 Duplicate</button>
+                            <button id="btn-delete-plan" class="btn btn-red">🗑️ Delete</button>
+                            <button id="btn-start-lesson-hud" class="btn btn-gold">▶️ Launch Class HUD</button>
+                        </div>
+                    </div>
+
+                    <div class="activities-container">
+                        <h3>Lesson Activities</h3>
+                        <div id="plan-activities-list" class="activities-list"></div>
+                        <button id="btn-add-activity" class="btn btn-sm btn-teal">➕ Add Activity Step</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS & DATA MODAL -->
+    <div id="modal-settings" class="modal-overlay hidden">
+        <div class="modal-card modal-md">
+            <div class="modal-header">
+                <h2>⚙️ Application Settings & Data Backup</h2>
+                <button class="btn-close-modal">✖</button>
+            </div>
+            <div class="modal-body settings-body">
+                <div class="settings-group">
+                    <h3>🔊 Audio & Speech Synthesis</h3>
+                    <div class="setting-row">
+                        <label for="set-sound-toggle">Sound Effects (Web Audio API)</label>
+                        <input type="checkbox" id="set-sound-toggle" checked>
+                    </div>
+                    <div class="setting-row">
+                        <label for="set-speech-voice">Speech Voice</label>
+                        <select id="set-speech-voice"></select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="set-speech-speed">Speech Rate: <span id="val-speech-speed">0.9x</span></label>
+                        <input type="range" id="set-speech-speed" min="0.5" max="1.5" step="0.1" value="0.9">
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>🎨 Visuals & Accessibility</h3>
+                    <div class="setting-row">
+                        <label for="set-theme">Color Theme</label>
+                        <select id="set-theme">
+                            <option value="theme-default">Default Rainbow</option>
+                            <option value="theme-highcontrast">High Contrast (Accessibility)</option>
+                            <option value="theme-ocean">Calm Ocean</option>
+                            <option value="theme-pastel">Soft Pastel</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="set-fontsize">Font Scaler</label>
+                        <select id="set-fontsize">
+                            <option value="font-size-normal">Normal (Zoom Standard)</option>
+                            <option value="font-size-large">Large (High Res Screens)</option>
+                            <option value="font-size-xlarge">Extra Large (Maximum Visibility)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="set-anim-toggle">Animations Enabled</label>
+                        <input type="checkbox" id="set-anim-toggle" checked>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>💾 Data Management & LocalStorage</h3>
+                    <div class="btn-grid-2">
+                        <button id="btn-data-export" class="btn btn-sm btn-teal">📥 Export Data (JSON)</button>
+                        <button id="btn-data-import-trigger" class="btn btn-sm btn-purple">📤 Import Data (JSON)</button>
+                        <input type="file" id="input-import-file" accept=".json" class="hidden">
+                        <button id="btn-data-backup" class="btn btn-sm btn-blue">💾 Save Backup</button>
+                        <button id="btn-data-restore" class="btn btn-sm btn-amber">🔄 Restore Backup</button>
+                    </div>
+                    <button id="btn-data-reset" class="btn btn-block btn-red margin-top-sm">⚠️ Reset All Data to Default</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STORY REEL PRESENTATION MODAL -->
+    <div id="modal-story-reel" class="modal-overlay hidden">
+        <div class="modal-card story-reel-card">
+            <div class="modal-header">
+                <h2 id="story-reel-title">🎬 Story Presentation Reel</h2>
+                <button class="btn-close-modal">&times;</button>
+            </div>
+            <div class="story-reel-modal-body">
+                <div id="story-reel-stage" class="story-reel-stage">
+                    <!-- Active panel spotlight visual & speech -->
+                </div>
+            </div>
+            <div class="story-reel-navigation-bar">
+                <button id="btn-story-reel-prev" class="btn btn-ctrl btn-orange">⬅️ Prev</button>
+                <div id="story-reel-indicator" class="story-reel-counter">Scene 1 of 4</div>
+                <button id="btn-story-reel-play" class="btn btn-ctrl btn-purple">🔊 Read Scene</button>
+                <button id="btn-story-reel-next" class="btn btn-ctrl btn-green">Next ➡️</button>
+                <button id="btn-story-reel-autoplay" class="btn btn-accent">▶️ Autoplay Scene</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MYSTERY TWIST SPINNER MODAL -->
+    <div id="modal-story-twist" class="modal-overlay hidden">
+        <div class="modal-card modal-md twist-modal-card">
+            <div class="modal-header">
+                <h2>🎲 Mystery Twist Spinner</h2>
+                <button class="btn-close-modal">&times;</button>
+            </div>
+            <div class="twist-modal-content">
+                <div class="twist-wheel-wrapper">
+                    <div id="twist-display-card" class="twist-display-card">
+                        <div id="twist-display-icon" class="twist-big-icon">🎲</div>
+                        <h3 id="twist-display-title" class="twist-big-title">Mystery Twist Ready!</h3>
+                        <p id="twist-display-desc" class="twist-big-desc">Click the button below to spin a thrilling plot twist for your story conflict!</p>
+                    </div>
+                </div>
+                <div class="twist-buttons-row">
+                    <button id="btn-spin-twist" class="btn btn-lg btn-purple">🎰 Spin Mystery Twist!</button>
+                    <button id="btn-apply-twist" class="btn btn-lg btn-green hidden">⚡ Add to Conflict Panel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WINNER CELEBRATION MODAL OVERLAY -->
+    <div id="modal-winner" class="modal-overlay hidden">
+        <div class="winner-popup-card">
+            <div class="trophy-bounce">🏆</div>
+            <h1 class="winner-title">SUPER WINNER!</h1>
+            <h2 id="winner-name" class="winner-name-text">LEO</h2>
+            <div class="winner-stars-display" id="winner-stars">❤️❤️❤️❤️❤️</div>
+            <p class="winner-subtitle">Awesome work in class today!</p>
+            <button id="btn-close-winner" class="btn btn-gold btn-lg">Yay! 🎉 Close</button>
+        </div>
+    </div>
+
+    <!-- Modular Application Engine Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/graphics.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/junior-modes.js"></script>
+    <!-- Senior Reading Lab Modular Cartridges -->
+    <script src="js/senior-reading/reading-registry.js"></script>
+    <script src="js/senior-reading/cartridges/reading-cartridge-beginner.js"></script>
+    <script src="js/senior-reading/cartridges/reading-cartridge-intermediate.js"></script>
+    <script src="js/senior-reading/cartridges/reading-cartridge-advanced.js"></script>
+    <script src="js/senior-reading.js"></script>
+    <!-- Reading Skills Practise Modular Story Cartridges -->
+    <script src="js/stories/scene-registry.js"></script>
+    <script src="js/stories/scene-winter-window.js"></script>
+    <script src="js/stories/scene-bluebird-garden.js"></script>
+    <script src="js/stories/scene-coral-reef.js"></script>
+    <script src="js/reading-practise.js"></script>
+    <!-- Senior Vocabulary & Spelling Lab Modular Cartridges -->
+    <script src="js/senior-vocab/vocab-registry.js"></script>
+    <script src="js/senior-vocab/cartridges/vocab-cartridge-beginner.js"></script>
+    <script src="js/senior-vocab/cartridges/vocab-cartridge-intermediate.js"></script>
+    <script src="js/senior-vocab/cartridges/vocab-cartridge-advanced.js"></script>
+    <script src="js/senior-vocab.js"></script>
+    <!-- STEM & Science Lab Modular Cartridges -->
+    <script src="js/stem/stem-registry.js"></script>
+    <script src="js/stem/lab-plants.js"></script>
+    <script src="js/stem/lab-water-cycle.js"></script>
+    <script src="js/stem/lab-solar-circuits.js"></script>
+    <script src="js/senior-stem.js"></script>
+    <!-- Story Builder Modular Universe Cartridges -->
+    <script src="js/story-builder/universe-registry.js"></script>
+    <script src="js/story-builder/universe-storyboard1-beginner.js"></script>
+    <script src="js/story-builder/universe-storyboard1-intermediate.js?v=20261104-microchip"></script>
+    <script src="js/story-builder/universe-storyboard1-advanced.js"></script>
+    <script src="js/story-engine.js?v=20261104-microchip"></script>
+    <!-- Senior Teacher Stage Modular Cartridges & Player Engine -->
+    <script src="js/senior-stage/cartridges/stage-cartridge-beginner.js"></script>
+    <script src="js/senior-stage/cartridges/stage-cartridge-intermediate.js"></script>
+    <script src="js/senior-stage/cartridges/stage-cartridge-advanced.js"></script>
+    <script src="js/senior-stage/senior-stage-player.js"></script>
+    <script src="js/quiz-games.js"></script>
+    <script src="js/teacher-tools.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

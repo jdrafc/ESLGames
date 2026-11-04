@@ -1,0 +1,66 @@
+{
+  "currentView": "view-home",
+  "alphaIndex": 6,
+  "phonicsIndex": 0,
+  "colourIndex": 2,
+  "numberIndex": 9,
+  "shapeIndex": 3,
+  "wordIndex": 2,
+  "students": [
+    {
+      "id": "st_1",
+      "name": "Leo",
+      "stars": 5,
+      "points": 50
+    },
+    {
+      "id": "st_2",
+      "name": "Emma",
+      "stars": 4,
+      "points": 40
+    },
+    {
+      "id": "st_3",
+      "name": "Noah",
+      "stars": 3,
+      "points": 30
+    }
+  ],
+  "plans": [
+    {
+      "id": "plan_default",
+      "title": "30-Min Zoom Phonics & Shapes",
+      "activities": [
+        {
+          "name": "Alphabet Song & Warmup",
+          "duration": 5,
+          "obj": "Letter Recognition A-Z"
+        },
+        {
+          "name": "Phonics Sound Focus",
+          "duration": 10,
+          "obj": "Letter sounds and simple words"
+        },
+        {
+          "name": "Shapes & Counting Game",
+          "duration": 10,
+          "obj": "Identify 10 geometry shapes"
+        },
+        {
+          "name": "Star Rewards & Goodbye",
+          "duration": 5,
+          "obj": "Award stars to students"
+        }
+      ]
+    }
+  ],
+  "activePlanId": "plan_default",
+  "settings": {
+    "sound": true,
+    "theme": "theme-default",
+    "fontSize": "font-size-normal",
+    "animations": true,
+    "speechSpeed": 0.9,
+    "speechVoice": "Microsoft Jenny Online (Natural) - English (United States)"
+  }
+}
