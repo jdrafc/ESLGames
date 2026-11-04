@@ -56,7 +56,7 @@ const DEFAULT_STATE = {
         fontSize: 'font-size-normal',
         animations: true,
         speechSpeed: 0.9,
-        speechVoice: ''
+        speechVoice: 'Google UK English Female'
     }
 };
 
@@ -75,6 +75,16 @@ function getStudentAvatar(name, explicitGender) {
 
 let appState = JSON.parse(localStorage.getItem('little_stars_state')) || DEFAULT_STATE;
 appState.settings = Object.assign({}, DEFAULT_STATE.settings, appState.settings || {});
+
+// Auto-align legacy speech voice to Google UK English Female if unset or on legacy fallback
+if (appState && appState.settings) {
+    if (!appState.settings.speechVoice || 
+        appState.settings.speechVoice === 'Microsoft Zira - English (United States)' || 
+        appState.settings.speechVoice === 'Microsoft David - English (United States)') {
+        appState.settings.speechVoice = 'Google UK English Female';
+        localStorage.setItem('little_stars_state', JSON.stringify(appState));
+    }
+}
 if (!appState.studioMode) appState.studioMode = 'junior';
 
 // Auto-sync: Replace legacy starter placeholder students (Leo/Emma/Noah) with official classroom roster (Eve/Yan)

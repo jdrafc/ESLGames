@@ -31,6 +31,69 @@ class AudioEngine {
         }
     }
 
+    pickBestVoice(voices, savedVoiceName = null) {
+        if (!voices || !voices.length) return null;
+
+        // 1. If user explicitly selected a custom voice, respect that choice
+        // (excluding legacy desktop defaults Zira/David so we can upgrade cleanly to Google UK English Female)
+        if (savedVoiceName && 
+            savedVoiceName !== 'Microsoft Zira - English (United States)' && 
+            savedVoiceName !== 'Microsoft David - English (United States)') {
+            const exact = voices.find(v => v.name === savedVoiceName);
+            if (exact) return exact;
+        }
+
+        // 2. Priority 1: Google UK English Female / Woman
+        let found = voices.find(v => {
+            const n = v.name.toLowerCase();
+            return n.includes('google') && (n.includes('uk') || n.includes('british')) && (n.includes('female') || n.includes('woman'));
+        });
+        if (found) return found;
+
+        // 3. Priority 2: Any British / UK English Female voice (e.g. Sonia Natural, Libby, Hazel, Victoria)
+        found = voices.find(v => {
+            const n = v.name.toLowerCase();
+            const l = v.lang.toLowerCase();
+            const isUK = l.startsWith('en-gb') || l.startsWith('en_gb') || n.includes('uk') || n.includes('great britain') || n.includes('united kingdom');
+            const isFemale = n.includes('female') || n.includes('woman') || n.includes('sonia') || n.includes('libby') || n.includes('hazel') || n.includes('victoria');
+            return isUK && isFemale;
+        });
+        if (found) return found;
+
+        // 4. Priority 3: Any Google UK English voice
+        found = voices.find(v => {
+            const n = v.name.toLowerCase();
+            return n.includes('google') && (n.includes('uk') || n.includes('british'));
+        });
+        if (found) return found;
+
+        // 5. Priority 4: Any Google English voice (e.g. Google US English)
+        found = voices.find(v => {
+            const n = v.name.toLowerCase();
+            return n.includes('google') && (n.includes('female') || n.includes('woman') || n.includes('us english'));
+        });
+        if (found) return found;
+
+        // 6. Priority 5: Any UK / British English voice
+        found = voices.find(v => {
+            const l = v.lang.toLowerCase();
+            return l.startsWith('en-gb') || l.startsWith('en_gb');
+        });
+        if (found) return found;
+
+        // 7. Priority 6: Standard Natural / Warm English Female (Jenny, Aria, Samantha)
+        found = voices.find(v => {
+            const n = v.name.toLowerCase();
+            const l = v.lang.toLowerCase();
+            return l.startsWith('en') && (n.includes('jenny') || n.includes('aria') || n.includes('female') || n.includes('samantha') || n.includes('zira'));
+        });
+        if (found) return found;
+
+        // 8. Priority 7: Any English voice
+        found = voices.find(v => v.lang.toLowerCase().startsWith('en'));
+        return found || voices[0];
+    }
+
     loadVoices() {
         if (!this.speechSynth) return;
         const populate = () => {
@@ -38,46 +101,12 @@ class AudioEngine {
             if (!voices.length) return;
 
             const savedVoiceName = appState?.settings?.speechVoice;
-            let foundVoice = null;
+            this.selectedVoice = this.pickBestVoice(voices, savedVoiceName);
 
-            // 1. Try exact name match
-            if (savedVoiceName) {
-                foundVoice = voices.find(v => v.name === savedVoiceName);
+            if (this.selectedVoice && appState && appState.settings) {
+                appState.settings.speechVoice = this.selectedVoice.name;
+                if (typeof saveState === 'function') saveState();
             }
-
-            // 2. Cross-browser Fuzzy Match (e.g. Edge "Microsoft Jenny" -> Chrome "Google US English / Zira / Female")
-            if (!foundVoice && savedVoiceName) {
-                const cleanSaved = savedVoiceName.toLowerCase();
-                foundVoice = voices.find(v => {
-                    const name = v.name.toLowerCase();
-                    if (cleanSaved.includes('female') && name.includes('female')) return true;
-                    if ((cleanSaved.includes('zira') || cleanSaved.includes('jenny') || cleanSaved.includes('aria')) && 
-                        (name.includes('female') || name.includes('zira') || name.includes('jenny') || name.includes('natural') || name.includes('google us'))) return true;
-                    return false;
-                });
-            }
-
-            // 3. Heuristic fallback for warm female voice in target browser
-            if (!foundVoice) {
-                foundVoice = voices.find(v => v.lang.startsWith('en') && (
-                    v.name.includes('Zira') || 
-                    v.name.includes('Jenny') || 
-                    v.name.includes('Ava') || 
-                    v.name.includes('Aria') || 
-                    v.name.includes('Samantha') || 
-                    v.name.includes('Victoria') || 
-                    v.name.includes('Female') ||
-                    v.name.includes('Natural') ||
-                    v.name.includes('Google US English')
-                ));
-            }
-
-            if (!foundVoice) {
-                foundVoice = voices.find(v => v.lang.startsWith('en'));
-            }
-
-            this.selectedVoice = foundVoice || voices[0];
-            appState.settings.speechVoice = this.selectedVoice.name;
 
             const selectElem = document.getElementById('set-speech-voice');
             if (selectElem) {
@@ -221,34 +250,12 @@ class AudioEngine {
         utterance.rate = this.speechRate || 0.92;
         utterance.pitch = 1.25; // Friendly, warm, slightly higher pitch for a cute female teacher tone
 
-        // Ensure teacher voice matches dashboard settings or female default
+        // Ensure teacher voice matches dashboard settings or preferred UK English default
         if (this.speechSynth) {
             const savedVoiceName = (typeof appState !== 'undefined' && appState?.settings?.speechVoice) || null;
-            if (savedVoiceName && (!this.selectedVoice || this.selectedVoice.name !== savedVoiceName)) {
+            if (!this.selectedVoice || (savedVoiceName && this.selectedVoice.name !== savedVoiceName)) {
                 const voices = this.speechSynth.getVoices();
-                if (voices && voices.length) {
-                    const matched = voices.find(v => v.name === savedVoiceName);
-                    if (matched) this.selectedVoice = matched;
-                }
-            }
-            if (!this.selectedVoice) {
-                this.loadVoices();
-            }
-            if (!this.selectedVoice) {
-                const voices = this.speechSynth.getVoices();
-                if (voices && voices.length) {
-                    this.selectedVoice = voices.find(v => v.lang.startsWith('en') && (
-                        v.name.includes('Zira') || 
-                        v.name.includes('Jenny') || 
-                        v.name.includes('Ava') || 
-                        v.name.includes('Aria') || 
-                        v.name.includes('Samantha') || 
-                        v.name.includes('Victoria') || 
-                        v.name.includes('Female') ||
-                        v.name.includes('Natural') ||
-                        v.name.includes('Google US English')
-                    )) || voices.find(v => v.lang.startsWith('en')) || voices[0];
-                }
+                this.selectedVoice = this.pickBestVoice(voices, savedVoiceName);
             }
         }
 
