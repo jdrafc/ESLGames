@@ -3,12 +3,12 @@
    ========================================================================== */
 
 let haltSpeechTimer = null;
-let juniorEntrySpeechTimer = null;
+let entrySpeechTimer = null;
 
 function haltAllAudioAndSpeech() {
-    if (juniorEntrySpeechTimer) {
-        clearTimeout(juniorEntrySpeechTimer);
-        juniorEntrySpeechTimer = null;
+    if (entrySpeechTimer) {
+        clearTimeout(entrySpeechTimer);
+        entrySpeechTimer = null;
     }
     if (haltSpeechTimer) {
         clearTimeout(haltSpeechTimer);
@@ -43,19 +43,20 @@ function haltAllAudioAndSpeech() {
 }
 window.haltAllAudioAndSpeech = haltAllAudioAndSpeech;
 
-function queueJuniorEntrySpeech(speakFnName, viewId) {
-    if (juniorEntrySpeechTimer) {
-        clearTimeout(juniorEntrySpeechTimer);
-        juniorEntrySpeechTimer = null;
+function queueEntrySpeech(speakFnName, viewId) {
+    if (entrySpeechTimer) {
+        clearTimeout(entrySpeechTimer);
+        entrySpeechTimer = null;
     }
-    juniorEntrySpeechTimer = setTimeout(() => {
+    entrySpeechTimer = setTimeout(() => {
         if (appState.currentView === viewId && typeof window[speakFnName] === 'function') {
             window[speakFnName]();
         }
-        juniorEntrySpeechTimer = null;
+        entrySpeechTimer = null;
     }, 120);
 }
-window.queueJuniorEntrySpeech = queueJuniorEntrySpeech;
+window.queueEntrySpeech = queueEntrySpeech;
+window.queueJuniorEntrySpeech = queueEntrySpeech;
 
 function switchView(targetViewId, pushToHistory = true) {
     // Close any open modals if switching views
@@ -90,29 +91,29 @@ function switchView(targetViewId, pushToHistory = true) {
         // Refresh specific mode views on entry
         if (targetViewId === 'view-alphabet') {
             renderAlphabetStage();
-            queueJuniorEntrySpeech('speakAlphabetCurrent', 'view-alphabet');
+            queueEntrySpeech('speakAlphabetCurrent', 'view-alphabet');
         }
         if (targetViewId === 'view-phonics') {
             renderPhonicsStage();
-            queueJuniorEntrySpeech('speakPhonicsCurrent', 'view-phonics');
+            queueEntrySpeech('speakPhonicsCurrent', 'view-phonics');
         }
         if (targetViewId === 'view-colours') {
             renderColourStage();
-            queueJuniorEntrySpeech('speakColourCurrent', 'view-colours');
+            queueEntrySpeech('speakColourCurrent', 'view-colours');
         }
         if (targetViewId === 'view-numbers') {
             renderNumberStage();
-            queueJuniorEntrySpeech('speakNumberCurrent', 'view-numbers');
+            queueEntrySpeech('speakNumberCurrent', 'view-numbers');
         }
         if (targetViewId === 'view-shapes') {
             renderShapeStage();
-            queueJuniorEntrySpeech('speakShapeCurrent', 'view-shapes');
+            queueEntrySpeech('speakShapeCurrent', 'view-shapes');
         }
         if (targetViewId === 'view-words') {
             appState.wordIndex = 0;
             saveState();
             renderWordStage();
-            queueJuniorEntrySpeech('speakWordCurrent', 'view-words');
+            queueEntrySpeech('speakWordCurrent', 'view-words');
         }
         if (targetViewId === 'view-quiz-stage') generateNewQuizQuestion();
         if (targetViewId === 'view-reading-senior') renderSeniorReadingStage();
@@ -121,6 +122,7 @@ function switchView(targetViewId, pushToHistory = true) {
             appState.seniorVocabIndex = 0;
             saveState();
             renderSeniorVocabStage(true);
+            queueEntrySpeech('speakSeniorVocabCurrent', 'view-vocab-senior');
         }
         if (targetViewId === 'view-stem-senior') {
             appState.stemTested = false;

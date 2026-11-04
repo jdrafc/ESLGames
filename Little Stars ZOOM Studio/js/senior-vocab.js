@@ -5,6 +5,19 @@
 let seniorSpellingRevealedIndices = new Set();
 let seniorSpellingAnimationTimer = null;
 
+function speakSeniorVocabCurrent() {
+    const { wordList } = getSeniorVocabContext();
+    const item = wordList[appState.seniorVocabIndex || 0];
+    if (item && typeof audioEngine !== 'undefined' && audioEngine.soundEnabled) {
+        if (appState.seniorVocabSubTab === 'spelling') {
+            audioEngine.speak(`Spelling Bee challenge! Listen to the word: ${item.word}`, true);
+        } else {
+            audioEngine.speak(item.word, true);
+        }
+    }
+}
+window.speakSeniorVocabCurrent = speakSeniorVocabCurrent;
+
 function getSeniorVocabContext() {
     const eslLevel = appState.eslLevelVocab || 'intermediate';
     let vocabLevelDict = null;
@@ -36,6 +49,7 @@ function renderSeniorVocabStage(resetSpellingReveal = true) {
                 }
                 saveState();
                 renderSeniorVocabStage(true);
+                speakSeniorVocabCurrent();
             });
         }
     }
@@ -412,6 +426,7 @@ if (vocabCatSelect) {
         appState.seniorVocabIndex = 0;
         saveState();
         renderSeniorVocabStage(true);
+        speakSeniorVocabCurrent();
     });
 }
 
@@ -419,9 +434,7 @@ if (vocabCatSelect) {
 const btnVocabSpeak = document.getElementById('btn-vocab-speak');
 if (btnVocabSpeak) {
     btnVocabSpeak.addEventListener('click', () => {
-        const { wordList } = getSeniorVocabContext();
-        const item = wordList[appState.seniorVocabIndex || 0];
-        if (item) audioEngine.speak(item.word, true);
+        speakSeniorVocabCurrent();
     });
 }
 
@@ -450,12 +463,10 @@ if (btnVocabBreakdownAudio) {
 const btnVocabReset = document.getElementById('btn-vocab-reset');
 if (btnVocabReset) {
     btnVocabReset.addEventListener('click', () => {
-        const { wordList } = getSeniorVocabContext();
         appState.seniorVocabIndex = 0;
         saveState();
         renderSeniorVocabStage(true);
-        const item = wordList[0];
-        if (item) audioEngine.speak(item.word, true);
+        speakSeniorVocabCurrent();
     });
 }
 
@@ -466,8 +477,7 @@ if (btnVocabNext) {
         appState.seniorVocabIndex = (appState.seniorVocabIndex + 1) % wordList.length;
         saveState();
         renderSeniorVocabStage(true);
-        const item = wordList[appState.seniorVocabIndex];
-        if (item) audioEngine.speak(item.word, true);
+        speakSeniorVocabCurrent();
     });
 }
 
@@ -478,8 +488,7 @@ if (btnVocabPrev) {
         appState.seniorVocabIndex = (appState.seniorVocabIndex - 1 + wordList.length) % wordList.length;
         saveState();
         renderSeniorVocabStage(true);
-        const item = wordList[appState.seniorVocabIndex];
-        if (item) audioEngine.speak(item.word, true);
+        speakSeniorVocabCurrent();
     });
 }
 
