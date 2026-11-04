@@ -2,7 +2,21 @@
    5. UI ROUTER & VIEW MANAGEMENT
    ========================================================================== */
 
+let haltSpeechTimer = null;
+let juniorEntrySpeechTimer = null;
+
 function haltAllAudioAndSpeech() {
+    if (juniorEntrySpeechTimer) {
+        clearTimeout(juniorEntrySpeechTimer);
+        juniorEntrySpeechTimer = null;
+    }
+    if (haltSpeechTimer) {
+        clearTimeout(haltSpeechTimer);
+        haltSpeechTimer = null;
+    }
+    if (typeof stopAllJuniorSlideshows === 'function') {
+        stopAllJuniorSlideshows();
+    }
     if (typeof stopKaraokeReadAlong === 'function') {
         stopKaraokeReadAlong();
     }
@@ -25,12 +39,23 @@ function haltAllAudioAndSpeech() {
     }
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        setTimeout(() => {
-            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        }, 30);
     }
 }
 window.haltAllAudioAndSpeech = haltAllAudioAndSpeech;
+
+function queueJuniorEntrySpeech(speakFnName, viewId) {
+    if (juniorEntrySpeechTimer) {
+        clearTimeout(juniorEntrySpeechTimer);
+        juniorEntrySpeechTimer = null;
+    }
+    juniorEntrySpeechTimer = setTimeout(() => {
+        if (appState.currentView === viewId && typeof window[speakFnName] === 'function') {
+            window[speakFnName]();
+        }
+        juniorEntrySpeechTimer = null;
+    }, 120);
+}
+window.queueJuniorEntrySpeech = queueJuniorEntrySpeech;
 
 function switchView(targetViewId, pushToHistory = true) {
     // Close any open modals if switching views
@@ -63,15 +88,31 @@ function switchView(targetViewId, pushToHistory = true) {
         setTimeout(resetScroll, 50);
 
         // Refresh specific mode views on entry
-        if (targetViewId === 'view-alphabet') renderAlphabetStage();
-        if (targetViewId === 'view-phonics') renderPhonicsStage();
-        if (targetViewId === 'view-colours') renderColourStage();
-        if (targetViewId === 'view-numbers') renderNumberStage();
-        if (targetViewId === 'view-shapes') renderShapeStage();
+        if (targetViewId === 'view-alphabet') {
+            renderAlphabetStage();
+            queueJuniorEntrySpeech('speakAlphabetCurrent', 'view-alphabet');
+        }
+        if (targetViewId === 'view-phonics') {
+            renderPhonicsStage();
+            queueJuniorEntrySpeech('speakPhonicsCurrent', 'view-phonics');
+        }
+        if (targetViewId === 'view-colours') {
+            renderColourStage();
+            queueJuniorEntrySpeech('speakColourCurrent', 'view-colours');
+        }
+        if (targetViewId === 'view-numbers') {
+            renderNumberStage();
+            queueJuniorEntrySpeech('speakNumberCurrent', 'view-numbers');
+        }
+        if (targetViewId === 'view-shapes') {
+            renderShapeStage();
+            queueJuniorEntrySpeech('speakShapeCurrent', 'view-shapes');
+        }
         if (targetViewId === 'view-words') {
             appState.wordIndex = 0;
             saveState();
             renderWordStage();
+            queueJuniorEntrySpeech('speakWordCurrent', 'view-words');
         }
         if (targetViewId === 'view-quiz-stage') generateNewQuizQuestion();
         if (targetViewId === 'view-reading-senior') renderSeniorReadingStage();

@@ -15,36 +15,43 @@ function renderAlphabetStage() {
     container.innerHTML = getSVGGraphic(item.icon, '#6c5ce7');
 }
 
+function speakAlphabetCurrent() {
+    const item = ALPHABET_DATA[appState.alphaIndex];
+    if (item && typeof audioEngine !== 'undefined' && audioEngine.soundEnabled) {
+        audioEngine.speak(`${item.letter}, for ${item.word}`, true);
+    }
+}
+window.speakAlphabetCurrent = speakAlphabetCurrent;
+
 const btnAlphaReset = document.getElementById('btn-alpha-reset');
 if (btnAlphaReset) {
     btnAlphaReset.addEventListener('click', () => {
         appState.alphaIndex = 0;
         renderAlphabetStage();
-        audioEngine.speak(`${ALPHABET_DATA[0].letter}, for ${ALPHABET_DATA[0].word}`);
+        speakAlphabetCurrent();
     });
 }
 
 document.getElementById('btn-alpha-next').addEventListener('click', () => {
     appState.alphaIndex = (appState.alphaIndex + 1) % ALPHABET_DATA.length;
     renderAlphabetStage();
-    audioEngine.speak(`${ALPHABET_DATA[appState.alphaIndex].letter}, for ${ALPHABET_DATA[appState.alphaIndex].word}`);
+    speakAlphabetCurrent();
 });
 
 document.getElementById('btn-alpha-prev').addEventListener('click', () => {
     appState.alphaIndex = (appState.alphaIndex - 1 + ALPHABET_DATA.length) % ALPHABET_DATA.length;
     renderAlphabetStage();
-    audioEngine.speak(`${ALPHABET_DATA[appState.alphaIndex].letter}, for ${ALPHABET_DATA[appState.alphaIndex].word}`);
+    speakAlphabetCurrent();
 });
 
 document.getElementById('btn-alpha-random').addEventListener('click', () => {
     appState.alphaIndex = Math.floor(Math.random() * ALPHABET_DATA.length);
     renderAlphabetStage();
-    audioEngine.speak(`${ALPHABET_DATA[appState.alphaIndex].letter}, for ${ALPHABET_DATA[appState.alphaIndex].word}`);
+    speakAlphabetCurrent();
 });
 
 document.getElementById('btn-alpha-speak').addEventListener('click', () => {
-    const item = ALPHABET_DATA[appState.alphaIndex];
-    audioEngine.speak(`${item.letter}. ${item.word}`);
+    speakAlphabetCurrent();
 });
 
 document.getElementById('btn-alpha-playall').addEventListener('click', function() {
@@ -93,40 +100,43 @@ function renderPhonicsStage() {
     document.getElementById('phonics-svg-container').innerHTML = getSVGGraphic(item.icon, '#a29bfe');
 }
 
+function speakPhonicsCurrent() {
+    const current = ALPHABET_DATA[appState.phonicsIndex];
+    if (current && typeof audioEngine !== 'undefined' && audioEngine.soundEnabled) {
+        audioEngine.speak(`${current.lower}... ${current.lower}... ${current.word}`, true);
+    }
+}
+window.speakPhonicsCurrent = speakPhonicsCurrent;
+
 const btnPhonicsReset = document.getElementById('btn-phonics-reset');
 if (btnPhonicsReset) {
     btnPhonicsReset.addEventListener('click', () => {
         appState.phonicsIndex = 0;
         renderPhonicsStage();
-        const current = ALPHABET_DATA[0];
-        audioEngine.speak(`${current.lower}... ${current.lower}... ${current.word}`, true);
+        speakPhonicsCurrent();
     });
 }
 
 document.getElementById('btn-phonics-next').addEventListener('click', () => {
     appState.phonicsIndex = (appState.phonicsIndex + 1) % ALPHABET_DATA.length;
     renderPhonicsStage();
-    const current = ALPHABET_DATA[appState.phonicsIndex];
-    audioEngine.speak(`${current.lower}... ${current.lower}... ${current.word}`, true);
+    speakPhonicsCurrent();
 });
 
 document.getElementById('btn-phonics-prev').addEventListener('click', () => {
     appState.phonicsIndex = (appState.phonicsIndex - 1 + ALPHABET_DATA.length) % ALPHABET_DATA.length;
     renderPhonicsStage();
-    const current = ALPHABET_DATA[appState.phonicsIndex];
-    audioEngine.speak(`${current.lower}... ${current.lower}... ${current.word}`, true);
+    speakPhonicsCurrent();
 });
 
 document.getElementById('btn-phonics-random').addEventListener('click', () => {
     appState.phonicsIndex = Math.floor(Math.random() * ALPHABET_DATA.length);
     renderPhonicsStage();
-    const current = ALPHABET_DATA[appState.phonicsIndex];
-    audioEngine.speak(`${current.lower}... ${current.lower}... ${current.word}`, true);
+    speakPhonicsCurrent();
 });
 
 document.getElementById('btn-phonics-speak').addEventListener('click', () => {
-    const current = ALPHABET_DATA[appState.phonicsIndex];
-    audioEngine.speak(`${current.lower}... ${current.lower}... ${current.word}`, true);
+    speakPhonicsCurrent();
 });
 
 const btnPhonicsPlayAll = document.getElementById('btn-phonics-playall');
@@ -188,36 +198,39 @@ function renderColourStage() {
         b.addEventListener('click', (e) => {
             appState.colourIndex = parseInt(e.currentTarget.getAttribute('data-col-idx'));
             renderColourStage();
-            const current = COLOURS_DATA[appState.colourIndex];
-            audioEngine.speak(`${current.name}... ${current.objectLabel}`, true);
+            speakColourCurrent();
         });
     });
 }
 
+function speakColourCurrent() {
+    const current = COLOURS_DATA[appState.colourIndex];
+    if (current && typeof audioEngine !== 'undefined' && audioEngine.soundEnabled) {
+        audioEngine.speak(`${current.name}... ${current.objectLabel}`, true);
+    }
+}
+window.speakColourCurrent = speakColourCurrent;
+
 document.getElementById('btn-colour-next').addEventListener('click', () => {
     appState.colourIndex = (appState.colourIndex + 1) % COLOURS_DATA.length;
     renderColourStage();
-    const current = COLOURS_DATA[appState.colourIndex];
-    audioEngine.speak(`${current.name}... ${current.objectLabel}`, true);
+    speakColourCurrent();
 });
 
 document.getElementById('btn-colour-prev').addEventListener('click', () => {
     appState.colourIndex = (appState.colourIndex - 1 + COLOURS_DATA.length) % COLOURS_DATA.length;
     renderColourStage();
-    const current = COLOURS_DATA[appState.colourIndex];
-    audioEngine.speak(`${current.name}... ${current.objectLabel}`, true);
+    speakColourCurrent();
 });
 
 document.getElementById('btn-colour-random').addEventListener('click', () => {
     appState.colourIndex = Math.floor(Math.random() * COLOURS_DATA.length);
     renderColourStage();
-    const current = COLOURS_DATA[appState.colourIndex];
-    audioEngine.speak(`${current.name}... ${current.objectLabel}`, true);
+    speakColourCurrent();
 });
 
 document.getElementById('btn-color-speak').addEventListener('click', () => {
-    const current = COLOURS_DATA[appState.colourIndex];
-    audioEngine.speak(`${current.name}... ${current.objectLabel}`, true);
+    speakColourCurrent();
 });
 
 const btnColourPlayAll = document.getElementById('btn-colour-playall');
@@ -277,26 +290,34 @@ function renderNumberStage() {
     }
 }
 
+function speakNumberCurrent() {
+    const current = NUMBERS_DATA[appState.numberIndex];
+    if (current && typeof audioEngine !== 'undefined' && audioEngine.soundEnabled) {
+        audioEngine.speak(current.word, true);
+    }
+}
+window.speakNumberCurrent = speakNumberCurrent;
+
 document.getElementById('btn-number-next').addEventListener('click', () => {
     appState.numberIndex = (appState.numberIndex + 1) % NUMBERS_DATA.length;
     renderNumberStage();
-    audioEngine.speak(NUMBERS_DATA[appState.numberIndex].word);
+    speakNumberCurrent();
 });
 
 document.getElementById('btn-number-prev').addEventListener('click', () => {
     appState.numberIndex = (appState.numberIndex - 1 + NUMBERS_DATA.length) % NUMBERS_DATA.length;
     renderNumberStage();
-    audioEngine.speak(NUMBERS_DATA[appState.numberIndex].word);
+    speakNumberCurrent();
 });
 
 document.getElementById('btn-number-random').addEventListener('click', () => {
     appState.numberIndex = Math.floor(Math.random() * NUMBERS_DATA.length);
     renderNumberStage();
-    audioEngine.speak(NUMBERS_DATA[appState.numberIndex].word);
+    speakNumberCurrent();
 });
 
 document.getElementById('btn-number-speak').addEventListener('click', () => {
-    audioEngine.speak(`${NUMBERS_DATA[appState.numberIndex].digit}, ${NUMBERS_DATA[appState.numberIndex].word}`);
+    speakNumberCurrent();
 });
 
 // --- 6.5 SHAPES MODE ---
@@ -308,35 +329,43 @@ function renderShapeStage() {
     document.getElementById('shape-svg-container').innerHTML = getSVGGraphic(item.icon, '#55efc4');
 }
 
+function speakShapeCurrent() {
+    const current = SHAPES_DATA[appState.shapeIndex];
+    if (current && typeof audioEngine !== 'undefined' && audioEngine.soundEnabled) {
+        audioEngine.speak(current.name, true);
+    }
+}
+window.speakShapeCurrent = speakShapeCurrent;
+
 const btnShapeReset = document.getElementById('btn-shape-reset');
 if (btnShapeReset) {
     btnShapeReset.addEventListener('click', () => {
         appState.shapeIndex = 0;
         renderShapeStage();
-        audioEngine.speak(SHAPES_DATA[0].name, true);
+        speakShapeCurrent();
     });
 }
 
 document.getElementById('btn-shape-next').addEventListener('click', () => {
     appState.shapeIndex = (appState.shapeIndex + 1) % SHAPES_DATA.length;
     renderShapeStage();
-    audioEngine.speak(SHAPES_DATA[appState.shapeIndex].name, true);
+    speakShapeCurrent();
 });
 
 document.getElementById('btn-shape-prev').addEventListener('click', () => {
     appState.shapeIndex = (appState.shapeIndex - 1 + SHAPES_DATA.length) % SHAPES_DATA.length;
     renderShapeStage();
-    audioEngine.speak(SHAPES_DATA[appState.shapeIndex].name, true);
+    speakShapeCurrent();
 });
 
 document.getElementById('btn-shape-random').addEventListener('click', () => {
     appState.shapeIndex = Math.floor(Math.random() * SHAPES_DATA.length);
     renderShapeStage();
-    audioEngine.speak(SHAPES_DATA[appState.shapeIndex].name, true);
+    speakShapeCurrent();
 });
 
 document.getElementById('btn-shape-speak').addEventListener('click', () => {
-    audioEngine.speak(SHAPES_DATA[appState.shapeIndex].name, true);
+    speakShapeCurrent();
 });
 
 const btnShapePlayAll = document.getElementById('btn-shape-playall');
@@ -384,36 +413,44 @@ function renderWordStage() {
     document.getElementById('word-svg-container').innerHTML = getSVGGraphic(item.icon, '#ffeaa7');
 }
 
+function speakWordCurrent() {
+    const current = SIMPLE_WORDS_DATA[appState.wordIndex];
+    if (current && typeof audioEngine !== 'undefined' && audioEngine.soundEnabled) {
+        audioEngine.speak(current.word, true);
+    }
+}
+window.speakWordCurrent = speakWordCurrent;
+
 const btnWordReset = document.getElementById('btn-word-reset');
 if (btnWordReset) {
     btnWordReset.addEventListener('click', () => {
         appState.wordIndex = 0;
         saveState();
         renderWordStage();
-        audioEngine.speak(SIMPLE_WORDS_DATA[0].word, true);
+        speakWordCurrent();
     });
 }
 
 document.getElementById('btn-word-next').addEventListener('click', () => {
     appState.wordIndex = (appState.wordIndex + 1) % SIMPLE_WORDS_DATA.length;
     renderWordStage();
-    audioEngine.speak(SIMPLE_WORDS_DATA[appState.wordIndex].word, true);
+    speakWordCurrent();
 });
 
 document.getElementById('btn-word-prev').addEventListener('click', () => {
     appState.wordIndex = (appState.wordIndex - 1 + SIMPLE_WORDS_DATA.length) % SIMPLE_WORDS_DATA.length;
     renderWordStage();
-    audioEngine.speak(SIMPLE_WORDS_DATA[appState.wordIndex].word, true);
+    speakWordCurrent();
 });
 
 document.getElementById('btn-word-random').addEventListener('click', () => {
     appState.wordIndex = Math.floor(Math.random() * SIMPLE_WORDS_DATA.length);
     renderWordStage();
-    audioEngine.speak(SIMPLE_WORDS_DATA[appState.wordIndex].word, true);
+    speakWordCurrent();
 });
 
 document.getElementById('btn-word-speak').addEventListener('click', () => {
-    audioEngine.speak(SIMPLE_WORDS_DATA[appState.wordIndex].word, true);
+    speakWordCurrent();
 });
 
 const btnWordPlayAll = document.getElementById('btn-word-playall');
@@ -451,3 +488,38 @@ if (btnWordPlayAll) {
     });
 }
 
+
+// Helper to halt all active Junior slideshow timers
+function stopAllJuniorSlideshows() {
+    if (alphaPlayAllTimer) {
+        clearInterval(alphaPlayAllTimer);
+        alphaPlayAllTimer = null;
+        const btn = document.getElementById('btn-alpha-playall');
+        if (btn) btn.innerText = '▶️ Play All A–Z';
+    }
+    if (phonicsPlayAllTimer) {
+        clearInterval(phonicsPlayAllTimer);
+        phonicsPlayAllTimer = null;
+        const btn = document.getElementById('btn-phonics-playall');
+        if (btn) btn.innerText = '▶️ Play All A–Z';
+    }
+    if (colourPlayAllTimer) {
+        clearInterval(colourPlayAllTimer);
+        colourPlayAllTimer = null;
+        const btn = document.getElementById('btn-colour-playall');
+        if (btn) btn.innerText = '▶️ Play All Colours';
+    }
+    if (shapePlayAllTimer) {
+        clearInterval(shapePlayAllTimer);
+        shapePlayAllTimer = null;
+        const btn = document.getElementById('btn-shape-playall');
+        if (btn) btn.innerText = '▶️ Play All Shapes';
+    }
+    if (wordPlayAllTimer) {
+        clearInterval(wordPlayAllTimer);
+        wordPlayAllTimer = null;
+        const btn = document.getElementById('btn-word-playall');
+        if (btn) btn.innerText = '▶️ Play All Words';
+    }
+}
+window.stopAllJuniorSlideshows = stopAllJuniorSlideshows;
