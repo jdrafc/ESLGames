@@ -32,11 +32,10 @@ const DEFAULT_STATE = {
         activeTwist: null,
         panels: []
     },
-    activeStudentId: null,
+    activeStudentId: 'st_1',
     students: [
-        { id: 'st_1', name: 'Leo', stars: 5, points: 50, gender: 'boy' },
-        { id: 'st_2', name: 'Emma', stars: 4, points: 40, gender: 'girl' },
-        { id: 'st_3', name: 'Noah', stars: 3, points: 30, gender: 'boy' }
+        { id: 'st_1', name: 'Eve', stars: 0, points: 0, gender: 'girl' },
+        { id: 'st_2', name: 'Yan', stars: 0, points: 0, gender: 'boy' }
     ],
     plans: [
         {
@@ -77,6 +76,22 @@ function getStudentAvatar(name, explicitGender) {
 let appState = JSON.parse(localStorage.getItem('little_stars_state')) || DEFAULT_STATE;
 appState.settings = Object.assign({}, DEFAULT_STATE.settings, appState.settings || {});
 if (!appState.studioMode) appState.studioMode = 'junior';
+
+// Auto-sync: Replace legacy starter placeholder students (Leo/Emma/Noah) with official classroom roster (Eve/Yan)
+if (appState && appState.students) {
+    const isLegacyDemoRoster = appState.students.length === 3 &&
+        appState.students[0].name === 'Leo' &&
+        appState.students[1].name === 'Emma' &&
+        appState.students[2].name === 'Noah';
+    if (isLegacyDemoRoster) {
+        appState.students = [
+            { id: 'st_1', name: 'Eve', stars: 0, points: 0, gender: 'girl' },
+            { id: 'st_2', name: 'Yan', stars: 0, points: 0, gender: 'boy' }
+        ];
+        appState.activeStudentId = 'st_1';
+        localStorage.setItem('little_stars_state', JSON.stringify(appState));
+    }
+}
 
 function saveState() {
     localStorage.setItem('little_stars_state', JSON.stringify(appState));
